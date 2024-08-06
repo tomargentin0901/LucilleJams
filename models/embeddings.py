@@ -2,11 +2,7 @@ from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from gensim.models.word2vec import Word2Vec
 from gensim.models import KeyedVectors
 import gensim.downloader
-
-import sys
 from config.tokenizer_config import tokenizer_config
-
-sys.path.append("..")
 from utils.dataset_utils import tokenize_songs
 from ast import literal_eval
 from typing import List, Union, Iterable, Dict
@@ -19,6 +15,7 @@ import numpy as np
 from pathlib import Path
 import shutil
 import math
+import pickle
 
 
 class Embeddings(ABC):
@@ -106,9 +103,7 @@ class Word2VecTitlesEmbeddings(TitlesEmbeddings):
                 if word in model.index_to_key:
                     word_embeddings.append(model[word])
             if not word_embeddings:
-                word_embeddings = np.zeros(
-                    (model.vector_size,)
-                )  # TODO: Find a better way to handle this.
+                word_embeddings = np.zeros((model.vector_size,))
             if pool_method == "mean":
                 title_embedding = np.mean(word_embeddings, axis=0)
             elif pool_method == "median":
@@ -216,67 +211,6 @@ class Word2VecSongsEmbeddings(SongsEmbeddings):
         similarities = cs(playlist_to_infer, embedded_songs_playlists).flatten()
         most_similar_playlists = np.argsort(similarities)[::-1][:topn]
         return most_similar_playlists
-
-
-# class Doc2VecSongsEmbeddings(SongsEmbeddings):
-
-#     def __init__(self, path_to_df: str = None, is_already_trained: bool = True):
-#         super().__init__(path_to_df)
-#         self.config = {
-#             "vector_size": 512,
-#             "window": 5,
-#             "min_count": 3,
-#             "dm": 1,
-#             "hs": 0,
-#             "epochs": 5,
-#         }  # TODO: Add config file to store the parameters
-#         self.is_already_trained = is_already_trained
-#         # if is not trained, df should be provided
-#         self.__model = None
-#         if (not self.is_already_trained) and (self.path_to_df is None):
-#             raise ValueError(
-#                 "Path to the dataframe should be provided if the model is not already trained."
-#             )
-
-#     def __iter__(self):
-#         for i, songs in enumerate(super().__iter__()):
-#             yield TaggedDocument(words=songs, tags=[str(i)])
-
-#     @property
-#     def model(self) -> Doc2Vec:
-#         if self.__model is None and not self.is_already_trained:
-#             self.build_model()
-#         elif self.__model is None and self.is_already_trained:
-#             self.__model = Doc2Vec.load("doc2vec/songs_embeddings.bin")
-#         return self.__model
-
-#     def build_model(self):
-#         self.__model = Doc2Vec(documents=self, **self.config)
-#         if not os.path.exists("doc2vec"):
-#             os.makedirs("doc2vec")
-#         self.__model.save("doc2vec/songs_embeddings.bin")
-
-#     @staticmethod
-#     def get_songs_playlists_embeddings(
-#         tokenized_songs: Union[List[str], List[List[str]]],
-#         model: Doc2Vec,
-#         epochs: int = 100,
-#     ):
-#         if not isinstance(tokenized_songs[0], list):
-#             tokenized_songs = [tokenized_songs]
-#         return np.array(
-#             [model.infer_vector(songs, epochs=epochs) for songs in tokenized_songs]
-#         )
-
-#     @staticmethod
-#     def get_most_similar_songs_playlists(
-#         playlist_to_infer: np.ndarray,
-#         model: Doc2Vec,
-#         topn: int = 30,
-#     ) -> List[int]:
-#         """Get the most similar playlists to the playlist to infer."""
-#         most_similar_playlists = model.dv.most_similar(playlist_to_infer, topn=topn)
-#         return most_similar_playlists
 
 
 def get_playlist_embeddings(
