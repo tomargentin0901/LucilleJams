@@ -3,7 +3,7 @@ from sklearn.metrics.pairwise import cosine_similarity as cs
 from typing import List, Dict, Tuple
 from collections import Counter
 import pandas as pd
-from model.embeddings import Word2VecSongsEmbeddings, Word2VecTitlesEmbeddings
+from models.embeddings import Word2VecSongsEmbeddings, Word2VecTitlesEmbeddings
 import json
 from tqdm import tqdm
 from utils.dataset_utils import clean_text
@@ -11,10 +11,10 @@ import faiss
 from utils.dataset_utils import normalize_embeddings
 from typing import Callable
 from jaro import jaro_winkler_metric
+from utils.dataset_utils import query_data_by_index
 
 
 def get_playlist_recommendations(
-    df: pd.DataFrame,
     user_playlist_embedding: np.ndarray,
     playlist_title: str,
     faiss_index: faiss.swigfaiss.Index,
@@ -32,7 +32,6 @@ def get_playlist_recommendations(
     In this case, it computes the most similar playlist by only looking at the title and computing fuzzy similarity.
 
     Args:
-        df (pd.DataFrame): The DataFrame containing playlist data.
         user_playlist_embedding (np.ndarray): The embedding vector representing the user's playlist.
         playlist_title (str): The title of the user's playlist.
         faiss_index (faiss.swigfaiss.Index): The Faiss index used for similarity search.
@@ -46,12 +45,13 @@ def get_playlist_recommendations(
 
     if user_playlist_embedding.any():
         sim, idx = faiss_index.search(user_playlist_embedding, n_playlists_to_pull)
-        sim = sim[0]
-        lookup_df = df.iloc[idx[0]]
+        sim, idx = sim[0], idx[0]
     else:
-        sim, lookup_df = lookup_df_by_title_similarity(
-            df, playlist_title, n_playlists_to_pull, str_similarity_metric
+        sim, idx = lookup_df_by_title_similarity(
+            playlist_title, n_playlists_to_pull, str_similarity_metric
         )
+    idx = [int(id_) for id_ in idx]
+    lookup_df = query_data_by_index(list(idx))
     return sim, lookup_df
 
 
@@ -95,16 +95,15 @@ def get_user_playlist_embedding(
 
 
 def lookup_df_by_title_similarity(
-    df: pd.DataFrame,
     user_playlist_title: str,
     n_playlists_to_pull: int,
     similarity_metric: Callable,
+    playlist_titles_df: str = "playlist_titles.pickle",
 ):
     """
     Looks up a DataFrame by title similarity and returns the top N playlists.
     Use this function, when neither the songs nor the title of the user's playlist are known by our embeddings models.
     Args:
-        df (pd.DataFrame): The DataFrame to search.
         user_playlist_title (str): The title of the user's playlist.
         n_playlists_to_pull (int): The number of playlists to retrieve.
         similarity_metric (Callable): A function that calculates the similarity between two titles.
@@ -113,6 +112,11 @@ def lookup_df_by_title_similarity(
         pd.DataFrame: The top N playlists sorted by similarity.
 
     """
+
+    df = pd.read_pickle(playlist_titles_df).to_frame(
+        name="title"
+    )  # Load all the playlist titles for similarity retrieval...
+
     df["similarity"] = (
         df["title"]
         .astype(str)
@@ -121,7 +125,7 @@ def lookup_df_by_title_similarity(
     df, sim = df.sort_values(by="similarity", ascending=False).head(
         n_playlists_to_pull
     ), df.pop("similarity")
-    return list(sim), df
+    return list(sim), df.index
 
 
 def complete_with_playlists(
@@ -299,7 +303,6 @@ def next_K_songs(
     seeds: List[str],
     playlist_title: str,
     songs: List[str],
-    df: pd.DataFrame,
     faiss_index: faiss.swigfaiss.Index,
     title_embeddings_model: Word2VecTitlesEmbeddings,
     songs_embeddings_model: Word2VecSongsEmbeddings,
@@ -318,7 +321,6 @@ def next_K_songs(
         seeds (List[str]): List of seed songs to start the playlist.
         playlist_title (str): Title of the playlist.
         songs (List[str]): List of all available songs.
-        df (pd.DataFrame): DataFrame containing information about playlists and songs.
         faiss_index (faiss.swigfaiss.Index): Faiss index used for similarity search.
         title_embeddings_model (Word2VecTitlesEmbeddings): Word2Vec model for title embeddings.
         songs_embeddings_model (Word2VecSongsEmbeddings): Word2Vec model for song embeddings.
@@ -342,7 +344,6 @@ def next_K_songs(
     )
 
     sim, lookup_df = get_playlist_recommendations(
-        df,
         user_playlist_embedding,
         playlist_title,
         faiss_index,
@@ -364,93 +365,108 @@ def next_K_songs(
     return playlist_completion, lookup_df
 
 
-def get_songs_submission(
-    df: pd.DataFrame,
-    title_embeddings_model: Word2VecTitlesEmbeddings,
-    songs_embeddings_model: Word2VecSongsEmbeddings,
-    faiss: faiss.swigfaiss.Index,
-    options: Dict[str, int],
-    challenge_set_path: str = "spotify_million_playlist_dataset_challenge/challenge_set.json",
-    save: bool = True,
-    K: int = 500,
-    n_playlists_to_pull: int = 300,
-    strategy: str = "most_popular_songs",
-    weighted: bool = True,
-    pool_method: str = "median",
-):
-    """
-    Generates a submission of recommended songs for each playlist in the challenge set.
+# def get_songs_submission(
+#     df: pd.DataFrame,
+#     title_embeddings_model: Word2VecTitlesEmbeddings,
+#     songs_embeddings_model: Word2VecSongsEmbeddings,
+#     faiss: faiss.swigfaiss.Index,
+#     options: Dict[str, int],
+#     challenge_set_path: str = "spotify_million_playlist_dataset_challenge/challenge_set.json",
+#     save: bool = True,
+#     K: int = 500,
+#     n_playlists_to_pull: int = 300,
+#     strategy: str = "most_popular_songs",
+#     weighted: bool = True,
+#     pool_method: str = "median",
+# ):
+#     """
+#     Generates a submission of recommended songs for each playlist in the challenge set.
 
-    Args:
-        df (pd.DataFrame): The DataFrame containing the song data.
-        title_embeddings_model (Word2VecTitlesEmbeddings): The Word2Vec model for title embeddings.
-        songs_embeddings_model (Word2VecSongsEmbeddings): The Word2Vec model for song embeddings.
-        faiss (faiss.swigfaiss.Index): The Faiss index for efficient similarity search.
-        options (Dict[str, int]): The dictionary of options for choosing song granularity.
-        challenge_set_path (str, optional): The path to the challenge set JSON file. Defaults to "spotify_million_playlist_dataset_challenge/challenge_set.json".
-        save (bool, optional): Whether to save the submission as a CSV file. Defaults to True.
-        K (int, optional): The number of songs to recommend for each playlist. Defaults to 500.
-        strategy (str, optional): The strategy for selecting songs. Defaults to "most_popular_songs".
+#     Args:
+#         df (pd.DataFrame): The DataFrame containing the song data.
+#         title_embeddings_model (Word2VecTitlesEmbeddings): The Word2Vec model for title embeddings.
+#         songs_embeddings_model (Word2VecSongsEmbeddings): The Word2Vec model for song embeddings.
+#         faiss (faiss.swigfaiss.Index): The Faiss index for efficient similarity search.
+#         options (Dict[str, int]): The dictionary of options for choosing song granularity.
+#         challenge_set_path (str, optional): The path to the challenge set JSON file. Defaults to "spotify_million_playlist_dataset_challenge/challenge_set.json".
+#         save (bool, optional): Whether to save the submission as a CSV file. Defaults to True.
+#         K (int, optional): The number of songs to recommend for each playlist. Defaults to 500.
+#         strategy (str, optional): The strategy for selecting songs. Defaults to "most_popular_songs".
 
-    Returns:
-        pd.DataFrame: The submission DataFrame containing the recommended songs for each playlist.
-    """
-    with open(challenge_set_path) as f:
-        challenge_set = json.load(f)
-    submission = []
-    for playlist in tqdm(challenge_set["playlists"]):
-        pid = playlist["pid"]
-        if "name" in playlist:
-            title = clean_text(playlist["name"])
-        else:
-            title = ""
-        tracks = playlist["tracks"]  # Playlist to complete
-        songs = []
-        seeds = []
-        for song in tracks:  # Get songs according the chosen granularity
-            song = [song["artist_name"], song["track_name"], song["album_name"]]
-            seeds.append(" - ".join(song))
-            song = {
-                key: song[i].strip()
-                for i, (key, val) in enumerate(options.items())
-                if val == 1
-            }
-            song = " - ".join(song.values())
-            songs.append(song)
-        n_most_sim_artists_to_consider = 50
-        n_playlists_to_pull = n_playlists_to_pull
-        playlist_completed = []
-        while len(playlist_completed) != K:
-            playlist_completed, _ = next_K_songs(
-                seeds,
-                title,
-                songs,
-                df,
-                faiss,
-                title_embeddings_model,
-                songs_embeddings_model,
-                K=K,
-                n_playlists_to_pull=n_playlists_to_pull,
-                strategy=strategy,
-                weighted=weighted,
-                pool_method=pool_method,
-                n_most_sim_artists_to_consider=n_most_sim_artists_to_consider,
-            )
-            n_most_sim_artists_to_consider += 50
-            n_playlists_to_pull += 100
-        n_most_sim_artists_to_consider = 50
-        n_playlists_to_pull = 300
-        if len(playlist_completed) != K:
-            raise ValueError("Playlist not completed.")
-        playlist_completed.insert(0, int(pid))
-        submission.append(playlist_completed)
-    cols = ["pid"] + [f"track_uri_{i}" for i in range(1, K + 1)]
-    submission = pd.DataFrame(submission, columns=cols)
-    if save:
-        submission.to_csv(
-            "submission_songs.csv", index=False
-        )  # Save the submission as songs and not as tracks, helps to see the relevance of the recommendations
-    return submission
+#     Returns:
+#         pd.DataFrame: The submission DataFrame containing the recommended songs for each playlist.
+#     """
+#     with open(challenge_set_path) as f:
+#         challenge_set = json.load(f)
+#     submission = []
+#     for playlist in tqdm(challenge_set["playlists"]):
+#         pid = playlist["pid"]
+#         if "name" in playlist:
+#             title = clean_text(playlist["name"])
+#         else:
+#             title = ""
+#         tracks = playlist["tracks"]  # Playlist to complete
+#         songs = []
+#         seeds = []
+#         for song in tracks:  # Get songs according the chosen granularity
+#             song = [song["artist_name"], song["track_name"], song["album_name"]]
+#             seeds.append(" - ".join(song))
+#             song = {
+#                 key: song[i].strip()
+#                 for i, (key, val) in enumerate(options.items())
+#                 if val == 1
+#             }
+#             song = " - ".join(song.values())
+#             songs.append(song)
+#         n_most_sim_artists_to_consider = 50
+#         n_playlists_to_pull = n_playlists_to_pull
+#         playlist_completed = []
+#         while len(playlist_completed) != K:
+#             playlist_completed, _ = next_K_songs(
+#                 seeds,
+#                 title,
+#                 songs,
+#                 df,
+#                 faiss,
+#                 title_embeddings_model,
+#                 songs_embeddings_model,
+#                 K=K,
+#                 n_playlists_to_pull=n_playlists_to_pull,
+#                 strategy=strategy,
+#                 weighted=weighted,
+#                 pool_method=pool_method,
+#                 n_most_sim_artists_to_consider=n_most_sim_artists_to_consider,
+#             )
+#             n_most_sim_artists_to_consider += 50
+#             n_playlists_to_pull += 100
+#         n_most_sim_artists_to_consider = 50
+#         n_playlists_to_pull = 300
+#         if len(playlist_completed) != K:
+#             raise ValueError("Playlist not completed.")
+#         playlist_completed.insert(0, int(pid))
+#         submission.append(playlist_completed)
+#     cols = ["pid"] + [f"track_uri_{i}" for i in range(1, K + 1)]
+#     submission = pd.DataFrame(submission, columns=cols)
+#     if save:
+#         submission.to_csv(
+#             "submission_songs.csv", index=False
+#         )  # Save the submission as songs and not as tracks, helps to see the relevance of the recommendations
+#     return submission
+
+
+# def get_final_submission(
+#     songs_to_id: Dict[str, str],
+#     path_to_songs_submission: str = "submission_songs.csv",
+#     save: bool = True,
+#     K: int = 500,
+# ):
+
+#     submission = pd.read_csv(path_to_songs_submission)
+#     for col in [f"track_uri_{i}" for i in range(1, K + 1)]:
+#         submission[col] = submission[col].map(songs_to_id)
+#     if save:
+#         submission.to_csv("submission.csv", index=False)
+#     return submission
 
 
 def create_faiss_index(embeddings: np.ndarray, save: bool = True):
@@ -459,18 +475,3 @@ def create_faiss_index(embeddings: np.ndarray, save: bool = True):
     if save:
         faiss.write_index(index, "embeddings_faiss.index")
     return index
-
-
-def get_final_submission(
-    songs_to_id: Dict[str, str],
-    path_to_songs_submission: str = "submission_songs.csv",
-    save: bool = True,
-    K: int = 500,
-):
-
-    submission = pd.read_csv(path_to_songs_submission)
-    for col in [f"track_uri_{i}" for i in range(1, K + 1)]:
-        submission[col] = submission[col].map(songs_to_id)
-    if save:
-        submission.to_csv("submission.csv", index=False)
-    return submission

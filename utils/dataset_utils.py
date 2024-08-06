@@ -12,6 +12,9 @@ from collections import Counter
 from itertools import groupby
 import matplotlib.pyplot as plt
 import numpy as np
+import sqlite3
+from ast import literal_eval
+
 
 emoji_pattern = "|".join(
     map(re.escape, emoji_name_to_text.keys())
@@ -295,61 +298,14 @@ def normalize_embeddings(embeddings: np.ndarray) -> np.ndarray:
     return embeddings
 
 
-def get_holdout_set(
-    df: pd.DataFrame, n: int = 10000, random_seed: int = 42, save: bool = False
+def query_data_by_index(
+    indices, col_songs_name: str = "songs", dbname: str = "spotify_dataset.db"
 ):
-    """Get holdout, holdout set won't be as representative as the challenged set.
-    However, it'll give a first idea of the pipeline performance, and we be used to try out methods and hyperparameters.
-    I reproduce three cases:
-        1. Playlist title only
-        2. First 10 songs only
-        3. Playlist title and first 10 songs
-       Args:
-           df (pd.DataFrame): Full spotify dataset
-           n (int, optional): Holdout size. Defaults to 10000.
-           random_seed (int, optional): . Defaults to 42.
-           save (bool, optional):. Defaults to False.
-
-       Returns:
-           pd.DataFrame: Spotify dataset without the holdout set
-           pd.DataFrame: Holdout set
-    """
-
-    # Get the holdout set. Metrics compute on this set. @100.
-    df["length"] = df["songs"].apply(lambda x: len(x))
-    holdout_df = df.loc[(df.popularity == 1) & (df.length >= 110)].sample(
-        n=n, random_state=42
-    )  # Keep the most popular playlists for the corpus and need at least 110 songs to cover all the tested cases.
-    holdout_df = holdout_df.reset_index(drop=True)
-    # Get n//5 playlists with only the title
-    holdout_df_title_only = holdout_df.loc[: n // 5 - 1, :]
-    holdout_df_title_only["next_k_songs"] = holdout_df_title_only["songs"].apply(
-        lambda x: x[:100]
-    )
-    holdout_df_title_only["songs"] = holdout_df_title_only["songs"].apply(lambda x: [])
-    holdout_df_title_only["category"] = 1
-    # Get n//5 playlists with the first 10 songs only, no title.
-    holdout_df_no_title = holdout_df.loc[n // 5 : 2 * (n // 5) - 1, :]
-    holdout_df_no_title["title"] = ""
-    holdout_df_no_title["next_k_songs"] = holdout_df_no_title["songs"].apply(
-        lambda x: x[10:100]
-    )
-    holdout_df_no_title["songs"] = holdout_df_no_title["songs"].apply(lambda x: x[:10])
-    holdout_df_no_title["category"] = 2
-    # For the other cases, we will use the title and first 10 songs.
-    holdout_df_other = holdout_df.loc[2 * (n // 5) :, :]
-    holdout_df_other["next_k_songs"] = holdout_df_other["songs"].apply(
-        lambda x: x[10:100]
-    )
-    holdout_df_other["songs"] = holdout_df_other["songs"].apply(lambda x: x[:10])
-    holdout_df_other["category"] = 3
-    # Merge all
-    holdout_df = pd.concat(
-        [holdout_df_title_only, holdout_df_no_title, holdout_df_other]
-    )
-    # Remove holdout from the original dataset
-    df = df.drop(holdout_df.index)
-    if save:
-        holdout_df.to_csv("spotify_dataset_holdout.csv", index=False)
-        df.to_csv("spotify_dataset.csv", index=False)
-    return df, holdout_df
+    """Fetch most similar playlists from a list of indices"""
+    conn = sqlite3.connect(dbname)
+    placeholders = ", ".join(["?"] * len(indices))
+    query = f'SELECT * FROM spotify_data WHERE "index" IN ({placeholders})'
+    df = pd.read_sql(query, conn, params=indices)
+    df[col_songs_name] = df[col_songs_name].apply(literal_eval)
+    conn.close()
+    return df
