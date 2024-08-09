@@ -268,10 +268,10 @@ def update_table(n_clicks, playlist_title, artists):
             data.append(
                 html.Tr(
                     [
-                        html.Td(artist),
-                        html.Td(song_title),
-                        html.Td(album_name),
-                        html.Td(preview),
+                        html.Td(artist, style={"text-align": "center"}),
+                        html.Td(song_title, style={"text-align": "center"}),
+                        html.Td(album_name, style={"text-align": "center"}),
+                        html.Td(preview, style={"text-align": "center"}),
                     ]
                 )
             )
@@ -282,10 +282,10 @@ def update_table(n_clicks, playlist_title, artists):
                 html.Thead(
                     html.Tr(
                         [
-                            html.Th("Artist"),
-                            html.Th("Song Title"),
-                            html.Th("Album Name"),
-                            html.Th("Listen"),
+                            html.Th("Artist", style={"text-align": "center"}),
+                            html.Th("Song Title", style={"text-align": "center"}),
+                            html.Th("Album Name", style={"text-align": "center"}),
+                            html.Th("Listen", style={"text-align": "center"}),
                         ]
                     )
                 )
