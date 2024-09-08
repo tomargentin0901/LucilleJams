@@ -134,6 +134,8 @@ Once all files are in place, you can run the app using the following command:
 python -m app.app
 ```
 
+After running the command, open your web browser and navigate to [http://127.0.0.1:8050/](http://127.0.0.1:8050) to access the application.
+
 ---
 
 ### Summary:
