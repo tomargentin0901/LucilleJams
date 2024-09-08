@@ -98,7 +98,7 @@ gunzip spotify_dataset.gz && mv spotify_dataset spotify_dataset.db
 
 For **Windows**:
 
-Use a tool like  [7-Zip](https://www.7-zip.org/) to unzip the file. Right-click the spotify_dataset.gz file and select "Extract Here".
+Use a tool like  [7-Zip](https://www.7-zip.org/) to unzip the file. Right-click the spotify_dataset.gz file and select "Extract Here". The extracted file should have a `.db` extension. Rename it if needed.
 
 Your project folder should look like this:
 
