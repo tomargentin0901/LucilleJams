@@ -76,11 +76,14 @@ Before running the app, download the required files from the GitHub release. Sin
 2. [FAISS Index Part 2](https://github.com/tomargentin0901/LucilleJams/releases/download/1.0.0/faiss.index.part-ab)
 3. [Spotify Dataset](https://github.com/tomargentin0901/LucilleJams/releases/download/1.0.0/spotify_dataset.gz)
 
+
+**Once the download is complete, move the downloaded files into the GitHub repository folder.**
+
 ### Merge the FAISS Index Parts:
 After downloading all FAISS index parts, merge them into a single file using the following command:
 
 ```bash
-cat faiss.index.part-* > faiss.index
+cat faiss.index.part-* > embeddings_faiss.index && rm faiss.index.part-*
 ```
 
 ### Unzip the Spotify Dataset:
@@ -97,7 +100,6 @@ For **Windows**:
 
 Use a tool like  [7-Zip](https://www.7-zip.org/) to unzip the file. Right-click the spotify_dataset.gz file and select "Extract Here".
 
-Ensure that the merged FAISS index, the unzipped Spotify dataset (spotify_dataset), and the pickle file are all in the main project folder (the same directory as app.py).
 Your project folder should look like this:
 
 ```plaintext
@@ -129,7 +131,7 @@ LucilleJams/
 Once all files are in place, you can run the app using the following command:
 
 ```bash
-python app.py
+python -m app.app
 ```
 
 ---
