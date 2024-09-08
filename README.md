@@ -66,17 +66,15 @@ Then install the dependencies:
 pip install -r requirements.txt
 ```
 
-## 3. Download and Merge Required Data Files
+## 3. Download, Merge and Unzip Required Data Files
 
 Before running the app, download the required files from the GitHub release. Since the FAISS index is split into multiple parts, you need to download all parts and then merge them.
 
 ### Download the Files:
 
-1. [FAISS Index Part 1](https://github.com/tomargentin0901/LucilleJams/releases/download/v1.0.0/faiss.index.part-aa)
-2. [FAISS Index Part 2](https://github.com/tomargentin0901/LucilleJams/releases/download/v1.0.0/faiss.index.part-ab)
-3. [FAISS Index Part 3](https://github.com/tomargentin0901/LucilleJams/releases/download/v1.0.0/faiss.index.part-ac)
-4. [FAISS Index Part 4](https://github.com/tomargentin0901/LucilleJams/releases/download/v1.0.0/faiss.index.part-ad)
-5. [Pickle File](https://github.com/your-username/my-app/releases/download/v1.0.0/your-pickle-file.pkl)
+1. [FAISS Index Part 1](https://github.com/tomargentin0901/LucilleJams/releases/download/1.0.0/faiss.index.part-aa)
+2. [FAISS Index Part 2](https://github.com/tomargentin0901/LucilleJams/releases/download/1.0.0/faiss.index.part-ab)
+3. [Spotify Dataset](https://github.com/tomargentin0901/LucilleJams/releases/download/1.0.0/spotify_dataset.gz)
 
 ### Merge the FAISS Index Parts:
 After downloading all FAISS index parts, merge them into a single file using the following command:
@@ -108,8 +106,7 @@ LucilleJams/
 ├── app.py
 ├── faiss.index
 ├── your-pickle-file.pkl
-├── spotify_dataset
-├── spotify_dataset.gz
+├── spotify_dataset.db
 ├── requirements.txt
 ├── README.md
 ├── config/
