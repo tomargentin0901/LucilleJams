@@ -93,7 +93,7 @@ The Spotify dataset is already included in the repository as a .gz file. You wil
 For **macOS/Linux**:
 
 ```bash
-gunzip spotify_dataset.gz
+gunzip spotify_dataset.gz && mv spotify_dataset spotify_dataset.db
 ```
 
 For **Windows**:
