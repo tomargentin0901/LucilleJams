@@ -1,65 +1,65 @@
-blinker @ file:///home/conda/feedstock_root/build_artifacts/blinker_1715091184126/work
-Brotli @ file:///Users/runner/miniforge3/conda-bld/brotli-split_1725267563793/work
-certifi @ file:///home/conda/feedstock_root/build_artifacts/certifi_1725278078093/work/certifi
-cffi @ file:///Users/runner/miniforge3/conda-bld/cffi_1725560578465/work
-charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1698833585322/work
-click @ file:///home/conda/feedstock_root/build_artifacts/click_1692311806742/work
-colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1666700638685/work
-contourpy @ file:///Users/runner/miniforge3/conda-bld/contourpy_1725378353329/work
-cycler @ file:///home/conda/feedstock_root/build_artifacts/cycler_1696677705766/work
-dash @ file:///home/conda/feedstock_root/build_artifacts/dash_1725511884495/work
-dash-bootstrap-components @ file:///home/conda/feedstock_root/build_artifacts/dash-bootstrap-components_1713142729855/work
-dash_mantine_components @ file:///home/conda/feedstock_root/build_artifacts/dash-mantine-components_1723106471739/work
-emoji @ file:///home/conda/feedstock_root/build_artifacts/emoji_1716215611530/work
-faiss==1.8.0
-Flask @ file:///home/conda/feedstock_root/build_artifacts/flask_1712667726126/work
-fonttools @ file:///Users/runner/miniforge3/conda-bld/fonttools_1725391290404/work
-gensim @ file:///Users/runner/miniforge3/conda-bld/gensim_1707360397965/work
-h2 @ file:///home/conda/feedstock_root/build_artifacts/h2_1634280454336/work
-hpack==4.0.0
-hyperframe @ file:///home/conda/feedstock_root/build_artifacts/hyperframe_1619110129307/work
-idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1724450538981/work
-importlib_metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1724187233579/work
-itsdangerous @ file:///home/conda/feedstock_root/build_artifacts/itsdangerous_1713372668944/work
-jaro-winkler==2.0.3
-jarowinkler @ file:///home/conda/feedstock_root/build_artifacts/jarowinkler_1699008143579/work
-Jinja2 @ file:///home/conda/feedstock_root/build_artifacts/jinja2_1715127149914/work
-joblib @ file:///home/conda/feedstock_root/build_artifacts/joblib_1714665484399/work
-kiwisolver @ file:///Users/runner/miniforge3/conda-bld/kiwisolver_1725459207683/work
-MarkupSafe @ file:///Users/runner/miniforge3/conda-bld/markupsafe_1724959568784/work
-matplotlib==3.9.2
+blinker 
+Brotli 
+certifi 
+cffi 
+charset-normalizer 
+click 
+colorama 
+contourpy 
+cycler 
+dash 
+dash-bootstrap-components 
+dash_mantine_components 
+emoji 
+faiss-cpu
+Flask 
+fonttools 
+gensim 
+h2 
+hpack
+hyperframe 
+idna 
+importlib_metadata 
+itsdangerous 
+jaro-winkler
+jarowinkler 
+Jinja2 
+joblib 
+kiwisolver 
+MarkupSafe 
+matplotlib
 munkres==1.1.4
-nest_asyncio @ file:///home/conda/feedstock_root/build_artifacts/nest-asyncio_1705850609492/work
+nest_asyncio 
 nltk==3.9.1
-numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1707225421156/work/dist/numpy-1.26.4-cp312-cp312-macosx_11_0_arm64.whl#sha256=011d57633d659db8280a5811d62d0c5a615719a6d7cbd46a04f6ffce0c2a7db3
-packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1718189413536/work
-pandas @ file:///Users/runner/miniforge3/conda-bld/pandas_1715897635637/work
-pillow @ file:///Users/runner/miniforge3/conda-bld/pillow_1719903585811/work
-plotly @ file:///home/conda/feedstock_root/build_artifacts/plotly_1724986959125/work
-pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1711811537435/work
-pyparsing @ file:///home/conda/feedstock_root/build_artifacts/pyparsing_1724616129934/work
-PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
-python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1709299778482/work
-python-dotenv @ file:///home/conda/feedstock_root/build_artifacts/python-dotenv-split_1706018097647/work
-pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1706886791323/work
-rapidfuzz @ file:///Users/runner/miniforge3/conda-bld/rapidfuzz_1725361146683/work
+numpy 
+packaging 
+pandas 
+pillow 
+plotly 
+pycparser 
+pyparsing 
+PySocks 
+python-dateutil 
+python-dotenv 
+pytz 
+rapidfuzz 
 regex==2024.7.24
-requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1717057054362/work
-retrying @ file:///home/conda/feedstock_root/build_artifacts/retrying_1721646300555/work
-scikit-learn @ file:///Users/runner/miniforge3/conda-bld/scikit-learn_1719998102390/work/dist/scikit_learn-1.5.1-cp312-cp312-macosx_11_0_arm64.whl#sha256=229a28c23c29bb69deeadfcf58e828560cd8b46205f48e1132b193c8dac81067
-scipy @ file:///Users/runner/miniforge3/conda-bld/scipy-split_1706041804770/work/dist/scipy-1.12.0-cp312-cp312-macosx_11_0_arm64.whl#sha256=492ebe973e51236862776064cf4b70d78cfd98b74aa74bcba49e23dc1fa5bf3f
-setuptools==73.0.1
-six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
-smart_open @ file:///home/conda/feedstock_root/build_artifacts/smart_open_split_1711455333245/work/dist
-tenacity @ file:///home/conda/feedstock_root/build_artifacts/tenacity_1722278858289/work
-threadpoolctl @ file:///home/conda/feedstock_root/build_artifacts/threadpoolctl_1714400101435/work
-tornado @ file:///Users/runner/miniforge3/conda-bld/tornado_1724956150763/work
-tqdm @ file:///home/conda/feedstock_root/build_artifacts/tqdm_1722737464726/work
-typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1717802530399/work
-tzdata @ file:///home/conda/feedstock_root/build_artifacts/python-tzdata_1707747584337/work
-urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1719391292974/work
-Werkzeug @ file:///home/conda/feedstock_root/build_artifacts/werkzeug_1724330738730/work
-wheel==0.44.0
-wrapt @ file:///Users/runner/miniforge3/conda-bld/wrapt_1724957938760/work
-zipp @ file:///home/conda/feedstock_root/build_artifacts/zipp_1724730934107/work
-zstandard==0.23.0
+requests 
+retrying 
+scikit-learn 
+scipy 
+setuptools
+six 
+smart_open 
+tenacity 
+threadpoolctl 
+tornado 
+tqdm 
+typing_extensions 
+tzdata 
+urllib3 
+Werkzeug 
+wheel
+wrapt 
+zipp 
+zstandard

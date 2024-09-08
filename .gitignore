@@ -1,0 +1,15 @@
+*.pkl
+*.gz
+*.csv
+*.index
+*.ipynb
+*.pyc
+*.mp3
+LucilleJams.egg-info/
+!spotify_dataset.gz
+!embeddings.pickle.gz
+!songs_to_id.pkl
+*.db
+spotify_million_playlist_dataset_challenge/
+spotify_million_playlist_dataset/
+embeddings.pickle
