@@ -138,10 +138,5 @@ After running the command, open your web browser and navigate to [http://127.0.0
 
 ---
 
-### Summary:
-1. **GitHub Repo**: `git clone https://github.com/tomargentin0901/LucilleJams.git`
-2. **Install Requirements**: `pip install -r requirements.txt`
-3. **Download files from the release, merge faiss index, and unzip the spotify dataset**: Provides download links and instructions on merging the FAISS index parts.
-4. **Run the App**: Instructions for running the app after setting everything up.
 
 
