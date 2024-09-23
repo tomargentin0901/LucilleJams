@@ -6,6 +6,39 @@ Your Personalized Music Companion
 
 Discover, explore, and play your favorite tracks with LucileJams. Trained on the Spotify Million Playlist Dataset, LucileJams offers a sophisticated recommendation pipeline built from scratch. Simply input a title and artists you love, and LucileJams will provide you with the next best songs to listen to. Inspired by the legendary guitar of B.B. King, LucileJams combines elegance and functionality to bring you an unparalleled musical experience. Tune in and let LucileJams be the soundtrack to your life.
 
+# Workflow
+
+### Overview
+
+What can we do with user-generated playlists, and how can we create an algorithm from scratch to automate recommendations for other users? The core idea driving this project's architecture is to map playlists in a high-dimensional space and then use similarity to generate recommendations. 
+
+The main challenge then becomes: **How can we create meaningful embeddings from the training set available?**
+
+To briefly explain, the **Spotify Million Playlist Dataset** consists of user-created playlists made up of songs, where each song is represented by its album, title, and artist. No additional metadata, such as lyrics, was provided.
+
+Inspired by the classical Word2Vec architecture, which predicts a word based on its neighbors, we aim to apply similar principles here. Word2Vec has historically shown great success in generating meaningful embeddings.
+
+The following diagrams explain the structure of the project. As the saying goes, "a picture is worth a thousand words."
+
+## How is the model trained?
+
+<div align="center">
+  <img src="./workflow/training_pipeline.svg" alt="Training Pipeline" width="600"/>
+</div>
+
+## How is a playlist embedding created?
+
+<div align="center">
+  <img src="./workflow/playlist_embedding_logic.svg" alt="Playlist Embedding Logic" width="600"/>
+</div>
+
+## How do all the components come together to generate recommendations and find similar playlists?
+
+<div align="center">
+  <img src="./workflow/inference_pipeline.svg" alt="Inference Pipeline" width="800"/>
+</div>
+
+
 # Instructions 
 
 ## Prerequisites
