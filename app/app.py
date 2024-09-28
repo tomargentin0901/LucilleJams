@@ -21,6 +21,7 @@ import requests
 import base64
 from pathlib import Path
 
+import random
 
 load_dotenv()
 
@@ -276,7 +277,7 @@ def update_neighbors(n_clicks, playlist_title, artists):
             user_playlist_embedding,
             title_embeddings_model,
             playlist_title=f"{playlist_title if playlist_title else 'USER PLAYLIST'}",
-            N=10000,
+            N=5000,
             perplexity=10,
             n_clusters=30,
         )
@@ -292,7 +293,7 @@ def update_neighbors(n_clicks, playlist_title, artists):
     State("playlist-title", "value"),
     State("artist", "value"),
 )
-def update_table(n_clicks, playlist_title, artists):
+def update_table(n_clicks, playlist_title, artists, shuffle: bool = True):
     if not playlist_title:
         playlist_title = ""
     if n_clicks > 0:
@@ -305,6 +306,8 @@ def update_table(n_clicks, playlist_title, artists):
             songs_embeddings_model,
             K=50,
         )
+        if shuffle:
+            random.shuffle(playlist_completed)
         url_overviews = get_url_overview_from_recommended_songs(playlist_completed)
         print(url_overviews)
         data = []
