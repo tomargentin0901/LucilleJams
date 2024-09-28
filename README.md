@@ -6,7 +6,18 @@ Your Personalized Music Companion
 
 Discover, explore, and play your favorite tracks with LucileJams. Trained on the Spotify Million Playlist Dataset, LucileJams offers a sophisticated recommendation pipeline built from scratch. Simply input a title and artists you love, and LucileJams will provide you with the next best songs to listen to. Inspired by the legendary guitar of B.B. King, LucileJams combines elegance and functionality to bring you an unparalleled musical experience. Tune in and let LucileJams be the soundtrack to your life.
 
-# Workflow
+
+## Project Demo
+
+Check out this demo of my music recommendation system.
+
+<div align="center">
+<a href="https://www.youtube.com/watch?v=U9KajAO0UXk">
+  <img src="https://img.youtube.com/vi/U9KajAO0UXk/maxresdefault.jpg" alt="Watch the demo" width="400"/>
+</a>
+</div>
+
+## Workflow
 
 ### Overview
 
@@ -39,9 +50,9 @@ The following diagrams explain the structure of the project. As the saying goes,
 </div>
 
 
-# Instructions 
+## Instructions 
 
-## Prerequisites
+### Prerequisites
 
 Before running the app, make sure you have the following installed:
 
@@ -51,7 +62,7 @@ Make sure you have the following installed:
 - **Unzip utility** (For unzipping `.gz` files. Most Linux/macOS systems have this pre-installed; on Windows, you can use tools like [7-Zip](https://www.7-zip.org/).)
 
 
-## 1. Clone the Repository
+### 1. Clone the Repository
 
 To download the app, clone the repository from GitHub using the following command:
 
@@ -64,7 +75,7 @@ Navigate into the project directory :
 cd LucilleJams
 ```
 
-## 2. Install Required Dependencies
+### 2. Install Required Dependencies
 
 The app uses Python dependencies listed in the `requirements.txt` file. Install them with the following command:
 
@@ -74,7 +85,7 @@ pip install -r requirements.txt
 ```
 
 
-### (Optional) Create a Virtual Environment
+#### (Optional) Create a Virtual Environment
 
 
 To avoid conflicts with other Python projects, it's recommended to create a virtual environment:
@@ -102,11 +113,11 @@ Then install the dependencies:
 pip install -r requirements.txt
 ```
 
-## 3. Download, Merge and Unzip Required Data Files
+### 3. Download, Merge and Unzip Required Data Files
 
 Before running the app, download the required files from the GitHub release. Since the FAISS index is split into multiple parts, you need to download all parts and then merge them.
 
-### Download the Files:
+#### Download the Files:
 
 1. [FAISS Index Part 1](https://github.com/tomargentin0901/LucilleJams/releases/download/1.0.0/faiss.index.part-aa)
 2. [FAISS Index Part 2](https://github.com/tomargentin0901/LucilleJams/releases/download/1.0.0/faiss.index.part-ab)
@@ -115,14 +126,14 @@ Before running the app, download the required files from the GitHub release. Sin
 
 **Once the download is complete, move the downloaded files into the GitHub repository folder.**
 
-### Merge the FAISS Index Parts:
+#### Merge the FAISS Index Parts:
 After downloading all FAISS index parts, merge them into a single file using the following command:
 
 ```bash
 cat faiss.index.part-* > embeddings_faiss.index && rm faiss.index.part-*
 ```
 
-### Unzip the Spotify Dataset:
+#### Unzip the Spotify Dataset:
 
 The Spotify dataset is already included in the repository as a .gz file. You will need to unzip it.
 
@@ -162,7 +173,7 @@ LucilleJams/
 
 ```
 
-## 4. Run the app 
+### 4. Run the app 
 
 Once all files are in place, you can run the app using the following command:
 
