@@ -59,7 +59,7 @@ Before running the app, make sure you have the following installed:
 Make sure you have the following installed:
 - **Python 3.x** (You can check your Python version by running `python --version` or `python3 --version`)
 - **pip** (Python package installer)
-- **Unzip utility** (For unzipping `.gz` files. Most Linux/macOS systems have this pre-installed; on Windows, you can use tools like [7-Zip](https://www.7-zip.org/).)
+- **venv** (Virtual environment module, which is included by default with Python 3.x. On some Linux systems, it may need to be installed separately using the package manager: sudo apt install python3-venv).
 
 
 ### 1. Clone the Repository
@@ -75,20 +75,9 @@ Navigate into the project directory :
 cd LucilleJams
 ```
 
-### 2. Install Required Dependencies
+### 2. Set Up a Virtual Environment and Install Required Dependencies
 
-The app uses Python dependencies listed in the `requirements.txt` file. Install them with the following command:
-
-
-```bash
-pip install -r requirements.txt
-```
-
-
-#### (Optional) Create a Virtual Environment
-
-
-To avoid conflicts with other Python projects, it's recommended to create a virtual environment:
+To avoid conflicts with other Python projects, it is recommended to create a virtual environment before installing the dependencies. 
 
 For **macOS/Linux**:
 
@@ -103,9 +92,6 @@ For **Windows**:
 python -m venv venv
 venv\Scripts\activate
 ```
-
-(Optional) Create a Virtual Environment
-To avoid conflicts with other Python projects, it's recommended to create a virtual environment:
 
 Then install the dependencies:
 
@@ -123,29 +109,24 @@ Before running the app, download the required files from the GitHub release. Sin
 2. [FAISS Index Part 2](https://github.com/tomargentin0901/LucilleJams/releases/download/1.0.0/faiss.index.part-ab)
 3. [Spotify Dataset](https://github.com/tomargentin0901/LucilleJams/releases/download/1.0.0/spotify_dataset.gz)
 
-
 **Once the download is complete, move the downloaded files into the GitHub repository folder.**
 
-#### Merge the FAISS Index Parts:
-After downloading all FAISS index parts, merge them into a single file using the following command:
+### 4. Prepare the FAISS Index and Spotify Dataset :
+
+The repository includes several FAISS index parts and the Spotify dataset in a compressed format. 
+Instead of manually merging the index parts and unzipping the dataset, you can run the provided Python script to automate this process.
+
+Simply run the following command after setting up the environment:
 
 ```bash
-cat faiss.index.part-* > embeddings_faiss.index && rm faiss.index.part-*
+python process_files.py
 ```
 
-#### Unzip the Spotify Dataset:
+This script will:
 
-The Spotify dataset is already included in the repository as a .gz file. You will need to unzip it.
-
-For **macOS/Linux**:
-
-```bash
-gunzip spotify_dataset.gz && mv spotify_dataset spotify_dataset.db
-```
-
-For **Windows**:
-
-Use a tool like  [7-Zip](https://www.7-zip.org/) to unzip the file. Right-click the spotify_dataset.gz file and select "Extract Here". The extracted file should have a `.db` extension. Rename it if needed.
+- Merge the FAISS Index Parts: It will combine the downloaded faiss.index.part-* files into a single embeddings_faiss.index file and remove the part files.
+- Unzip the Spotify Dataset: It will unzip spotify_dataset.gz and rename it to spotify_dataset.db automatically.
+  
 
 Your project folder should look like this:
 
@@ -156,6 +137,7 @@ LucilleJams/
 ├── faiss.index
 ├── your-pickle-file.pkl
 ├── spotify_dataset.db
+├── process_files.py       
 ├── requirements.txt
 ├── README.md
 ├── config/
@@ -170,6 +152,7 @@ LucilleJams/
     ├── dataset_utils.py
     ├── inference_utils.py
     ├── visualization_utils.py
+
 
 ```
 
