@@ -18,7 +18,7 @@ import math
 def get_playlist_recommendations(
     user_playlist_embedding: np.ndarray,
     playlist_title: str,
-    faiss_index: faiss.swigfaiss.Index,
+    faiss_index,
     n_playlists_to_pull: int,
     str_similarity_metric: Callable = jaro_winkler_metric,
 ):
@@ -45,7 +45,9 @@ def get_playlist_recommendations(
     """
 
     if user_playlist_embedding.any():
-        sim, idx = faiss_index.search(user_playlist_embedding, n_playlists_to_pull)
+        sim, idx = faiss_index.search(
+            user_playlist_embedding.astype(np.float32), n_playlists_to_pull
+        )
         sim, idx = sim[0], idx[0]
     else:
         sim, idx = lookup_df_by_title_similarity(
@@ -307,7 +309,7 @@ def next_K_songs(
     seeds: List[str],
     playlist_title: str,
     songs: List[str],
-    faiss_index: faiss.swigfaiss.Index,
+    faiss_index,
     title_embeddings_model: Word2VecTitlesEmbeddings,
     songs_embeddings_model: Word2VecSongsEmbeddings,
     K: int = 500,

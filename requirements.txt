@@ -11,7 +11,7 @@ dash
 dash-bootstrap-components 
 dash_mantine_components 
 emoji 
-faiss-cpu
+faiss-cpu==1.8.0
 Flask 
 fonttools 
 gensim 
