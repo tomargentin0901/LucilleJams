@@ -86,7 +86,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-For **Windows**:
+For **Windows (using cmd)**:
 
 ```bash
 python -m venv venv
